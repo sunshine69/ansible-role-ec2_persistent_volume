@@ -1,0 +1,16 @@
+- name: Create ec2 volumes
+  ec2_vol:
+    profile: "{{ profile|default(omit) }}"
+    region: "{{ region|default(omit) }}"
+    name: "{{ item.name|default(omit) }}"
+    volume_type: "{{ item.volume_type|default('gp2') }}"
+    volume_size: "{{ item.volume_size }}"
+    snapshot: "{{ item.snapshot|default(omit) }}"
+    iops: "{{ item.iops|default(omit) }}"
+    encrypted: "{{ item.encrypted|default('no') }}"
+    delete_on_termination: "{{ item.delete_on_termination|default('no') }}"
+    kms_key_id: "{{ item.kms_key_id|default(omit) }}"
+    state: "present"
+    zone: "{{ item.zone }}"
+    tags: "{{ item.tags }}"
+  with_items: "{{ ec2_persistent_volumes|default([]) }}"

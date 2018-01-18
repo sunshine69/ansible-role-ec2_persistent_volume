@@ -1,0 +1,22 @@
+# The ansible ec2_vol keep creating new one even the same vol with tag exists
+# (might be the way aws is). Thus we list the vol to see if exists before
+# creating
+
+- include_tasks: "get-vol-facts.yml"
+
+- name: Create ec2 volumes
+  ec2_vol:
+    profile: "{{ profile|default(omit) }}"
+    region: "{{ region|default(omit) }}"
+    name: "{{ vol_item.name|default(omit) }}"
+    volume_type: "{{ vol_item.volume_type|default('gp2') }}"
+    volume_size: "{{ vol_item.volume_size }}"
+    snapshot: "{{ vol_item.snapshot|default(omit) }}"
+    iops: "{{ vol_item.iops|default(omit) }}"
+    encrypted: "{{ vol_item.encrypted|default('no') }}"
+    delete_on_termination: "{{ vol_item.delete_on_termination|default('no') }}"
+    kms_key_id: "{{ vol_item.kms_key_id|default(omit) }}"
+    state: "present"
+    zone: "{{ vol_item.zone }}"
+    tags: "{{ vol_item.tags }}"
+  when: not get_vol_facts_out.volumes

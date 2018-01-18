@@ -1,0 +1,10 @@
+- block:
+    - include_tasks: "get-vol-facts.yml"
+    - name: Delete ec2 volumes
+      ec2_vol:
+        profile: "{{ profile|default(omit) }}"
+        region: "{{ region|default(omit) }}"
+        id: "{{ item.id }}"
+        state: "absent"
+      with_items: "{{ get_vol_facts_out.volumes }}"
+  when: stage == 'delete'

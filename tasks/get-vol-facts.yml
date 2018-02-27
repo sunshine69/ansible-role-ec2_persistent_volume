@@ -1,6 +1,10 @@
+- name: Make initial vol_item_filter empty
+  set_fact:
+    vol_item_filter: {}
+
 - name: Create the filter tags from item tags dict
   set_fact:
-    vol_item_filter: "{{ {}|combine({'tag:'+item.key: item.value }) }}"
+    vol_item_filter: "{{ vol_item_filter|combine({'tag:'+item.key: item.value }) }}"
   with_dict: "{{ vol_item.tags }}"
 
 - name: Detect if vol exists
@@ -9,4 +13,3 @@
     region: "{{ region|default(omit) }}"
     filters: "{{ vol_item_filter }}"
   register: get_vol_facts_out
-

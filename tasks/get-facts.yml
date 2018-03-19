@@ -1,0 +1,28 @@
+- name: Make initial vol_item_filter empty
+  set_fact:
+    vol_item_filter: {}
+
+- name: Create the filter tags from item tags dict
+  set_fact:
+    vol_item_filter: "{{ vol_item_filter|combine({'tag:'+item.key: item.value }) }}"
+  with_dict: "{{ vol_item.tags }}"
+
+- name: Get volumes facts
+  ec2_vol_facts:
+    profile: "{{ profile|default(omit) }}"
+    region: "{{ region|default(omit) }}"
+    aws_access_key: "{{ sts_creds.access_key|default() }}"
+    aws_secret_key: "{{ sts_creds.secret_key|default() }}"
+    security_token: "{{ sts_creds.session_token|default() }}"
+    filters: "{{ vol_item_filter }}"
+  register: get_vol_facts_out
+
+- name: Get snapshots facts
+  ec2_snapshot_facts:
+    profile: "{{ profile|default(omit) }}"
+    region: "{{ region|default(omit) }}"
+    aws_access_key: "{{ sts_creds.access_key|default() }}"
+    aws_secret_key: "{{ sts_creds.secret_key|default() }}"
+    security_token: "{{ sts_creds.session_token|default() }}"
+    filters: "{{ vol_item_filter }}"
+  register: get_snap_facts_out

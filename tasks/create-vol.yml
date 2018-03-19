@@ -2,16 +2,24 @@
 # (might be the way aws is). Thus we list the vol to see if exists before
 # creating
 
-- include_tasks: "get-vol-facts.yml"
+- include_tasks: "get-facts.yml"
+
+- name: Set fact restore_snapshot_id if found the latest snapshot backup
+  set_fact:
+    restore_snapshot_id: "{{ get_snap_facts_out.snapshots.0.snapshot_id }}"
+  when: get_snap_facts_out.snapshots
 
 - name: Create ec2 volumes
   ec2_vol:
     profile: "{{ profile|default(omit) }}"
     region: "{{ region|default(omit) }}"
+    aws_access_key: "{{ sts_creds.access_key|default() }}"
+    aws_secret_key: "{{ sts_creds.secret_key|default() }}"
+    security_token: "{{ sts_creds.session_token|default() }}"
     name: "{{ vol_item.name|default(omit) }}"
     volume_type: "{{ vol_item.volume_type|default('gp2') }}"
     volume_size: "{{ vol_item.volume_size }}"
-    snapshot: "{{ vol_item.snapshot|default(omit) }}"
+    snapshot: "{{ restore_snapshot_id|default(omit) }}"
     iops: "{{ vol_item.iops|default(omit) }}"
     encrypted: "{{ vol_item.encrypted|default('no') }}"
     delete_on_termination: "{{ vol_item.delete_on_termination|default('no') }}"

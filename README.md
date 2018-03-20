@@ -12,7 +12,13 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-ec2_persistent_volumes - List of ec2 volumes to be created or delete
+- `ec2_persistent_volumes` - List of ec2 volumes to be created or delete
+
+- `force_volume_creation` - Boolean - Optional - Default is False (not doing it)
+
+  This enforce the volume to be removed and then created from the last known
+  backup snapshot. The removal may fail if the volumes are still attached to
+  ec2 instances which is a kind of protection.
 
 Dependencies
 ------------

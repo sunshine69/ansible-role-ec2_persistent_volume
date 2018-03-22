@@ -14,9 +14,6 @@
       ec2_vol:
         profile: "{{ profile|default(omit) }}"
         region: "{{ region|default(omit) }}"
-        aws_access_key: "{{ sts_creds.access_key|default() }}"
-        aws_secret_key: "{{ sts_creds.secret_key|default() }}"
-        security_token: "{{ sts_creds.session_token|default() }}"
         id: "{{ item.id }}"
         state: absent
       with_items: "{{ get_vol_facts_out.volumes }}"
@@ -26,9 +23,6 @@
       ec2_vol:
         profile: "{{ profile|default(omit) }}"
         region: "{{ region|default(omit) }}"
-        aws_access_key: "{{ sts_creds.access_key|default() }}"
-        aws_secret_key: "{{ sts_creds.secret_key|default() }}"
-        security_token: "{{ sts_creds.session_token|default() }}"
         name: "{{ vol_item.name|default(omit) }}"
         volume_type: "{{ vol_item.volume_type|default('gp2') }}"
         volume_size: "{{ vol_item.volume_size }}"

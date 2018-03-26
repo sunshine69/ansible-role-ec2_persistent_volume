@@ -7,9 +7,16 @@
     vol_item_filter: "{{ vol_item_filter|combine({'tag:'+item.key: item.value }) }}"
   with_dict: "{{ vol_item.tags }}"
 
-- name: Detect if vol exists
+- name: Get volumes facts
   ec2_vol_facts:
     profile: "{{ profile|default(omit) }}"
     region: "{{ region|default(omit) }}"
     filters: "{{ vol_item_filter }}"
   register: get_vol_facts_out
+
+- name: Get snapshots facts
+  ec2_snapshot_facts:
+    profile: "{{ profile|default(omit) }}"
+    region: "{{ region|default(omit) }}"
+    filters: "{{ vol_item_filter }}"
+  register: get_snap_facts_out

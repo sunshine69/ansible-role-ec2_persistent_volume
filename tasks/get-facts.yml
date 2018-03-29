@@ -7,6 +7,10 @@
     vol_item_filter: "{{ vol_item_filter|combine({'tag:'+item.key: item.value }) }}"
   with_dict: "{{ vol_item.tags }}"
 
+- debug:
+    var: vol_item_filter
+    verbosity: 2
+
 - name: Get volumes facts
   ec2_vol_facts:
     profile: "{{ profile|default(omit) }}"

@@ -19,6 +19,10 @@
       with_items: "{{ get_vol_facts_out.volumes }}"
       when: force_volume_creation|default()
 
+    - pause:
+        seconds: 60
+        prompt: "Waiting for volume with restore_snapshot_id: {{ restore_snapshot_id }} completedly removed"
+
     - name: Create ec2 volumes
       ec2_vol:
         profile: "{{ profile|default(omit) }}"
@@ -34,4 +38,4 @@
         state: "present"
         zone: "{{ vol_item.zone }}"
         tags: "{{ vol_item.tags }}"
-  when: not get_vol_facts_out.volumes
+  when: not get_vol_facts_out.volumes or force_volume_creation|default()

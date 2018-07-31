@@ -22,6 +22,7 @@
     - pause:
         seconds: 60
         prompt: "Waiting for volume with restore_snapshot_id: {{ restore_snapshot_id }} completedly removed"
+      when: restore_snapshot_id|default()
 
     - name: Create ec2 volumes
       ec2_vol:

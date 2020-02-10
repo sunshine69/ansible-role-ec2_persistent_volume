@@ -12,14 +12,14 @@
     verbosity: 2
 
 - name: Get volumes facts
-  ec2_vol_facts:
+  ec2_vol_info:
     profile: "{{ profile|default(omit) }}"
     region: "{{ region|default(omit) }}"
     filters: "{{ vol_item_filter }}"
   register: get_vol_facts_out
 
 - name: Get snapshots facts
-  ec2_snapshot_facts:
+  ec2_snapshot_info:
     profile: "{{ profile|default(omit) }}"
     region: "{{ region|default(omit) }}"
     filters: "{{ vol_item_filter }}"
